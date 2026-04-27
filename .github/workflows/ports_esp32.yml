@@ -1,4 +1,11 @@
 name: esp32 port
+run: |
+    python3 make.py esp32 \
+      BOARD=ESP32_GENERIC_C6 \
+      DISPLAY=st7789 \
+      LV_CFLAGS="-DLV_COLOR_DEPTH=16" \
+      --flash-size=4
+
 
 on:
   push:
