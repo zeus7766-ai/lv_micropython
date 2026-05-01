@@ -1,0 +1,39 @@
+yaml
+
+name: ESP32 LVGL Build
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-esp32:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install esptool
+    
+    - name: Build ESP32 firmware with LVGL
+      run: |
+        python make.py esp32 \
+          BOARD=ESP32_GENERIC \
+          DISPLAY=ili9341 \
+          --flash-size=4
+    
+    - name: Upload firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: lvgl-esp32-firmware
+        path: build/lvgl_micropy_*.bin
